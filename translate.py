@@ -1,13 +1,8 @@
 import googletrans
-
-translator = googletrans.Translator()
-
-# print(googletrans.LANGUAGES)
-
-text_1 = "Bom dia, é um prazer estar aqui com vocês"
-translated = translator.translate(text_1, "en")
-print(translated.text)
-
-text_2 = "Hello guys, this tool is really interesting, right?"
-translated_2 = translator.translate(text_2, "pt")
-print(translated_2.text)
+class Translator():
+    def __init__(self):
+        self.translator = googletrans.Translator()
+        
+    def translate(self, text_input, dest_language):
+        translated_output = self.translator.translate(text_input, dest_language)
+        return translated_output.text
