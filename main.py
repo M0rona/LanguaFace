@@ -1,5 +1,5 @@
 import customtkinter as tk
-from translate import traduzir
+from translate import translator
 
 window = tk.CTk()
 
@@ -20,8 +20,7 @@ combo = tk.CTkComboBox(window, values=["Inglês", "Português", "Chinês", "Espa
 combo.pack(padx=10)
 
 def click():
-    traducao = traduzir(texto, combo)
-    print(traducao)
+    print(translator(texto, combo))
 
 
 button = tk.CTkButton(window, text="Traduzir", command=click)
