@@ -1,30 +1,30 @@
 import customtkinter as tk
 from translate import traduzir
 
-janela = tk.CTk()
+window = tk.CTk()
 
-janela.geometry("700x500")
-janela.resizable(False, False)
-janela.title("LanguaFace")
+window.geometry("700x500")
+window.resizable(False, False)
+window.title("LanguaFace")
 
-title = tk.CTkLabel(janela, text="Traduza o texto que quiser")
+title = tk.CTkLabel(window, text="Traduza o texto que quiser")
 title.pack(padx=10, pady=10)
 
-texto = tk.CTkEntry(janela, placeholder_text="Informe a frase a ser traduzida", width=500)
+texto = tk.CTkEntry(window, placeholder_text="Informe a frase a ser traduzida", width=500)
 texto.pack(padx=10)
 
-labelIdioma = tk.CTkLabel(janela, text="Informe o idioma")
-labelIdioma.pack(padx=10, pady=10)
+labelLanguages = tk.CTkLabel(window, text="Informe o idioma")
+labelLanguages.pack(padx=10, pady=10)
 
-combo = tk.CTkComboBox(janela, values=["Inglês", "Português", "Chinês", "Espanhol", "Francês", "Russo"])
+combo = tk.CTkComboBox(window, values=["Inglês", "Português", "Chinês", "Espanhol", "Francês", "Russo"])
 combo.pack(padx=10)
 
-def clique():
+def click():
     traducao = traduzir(texto, combo)
     print(traducao)
 
 
-botao = tk.CTkButton(janela, text="Traduzir", command=clique)
-botao.pack(padx=10, pady=30)
+button = tk.CTkButton(window, text="Traduzir", command=clique)
+button.pack(padx=10, pady=30)
 
-janela.mainloop()
+window.mainloop()
