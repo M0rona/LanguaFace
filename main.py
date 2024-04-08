@@ -24,7 +24,7 @@ def click():
     print(traducao)
 
 
-button = tk.CTkButton(window, text="Traduzir", command=clique)
+button = tk.CTkButton(window, text="Traduzir", command=click)
 button.pack(padx=10, pady=30)
 
 window.mainloop()
