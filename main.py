@@ -1,7 +1,30 @@
-from translate import Translator
+import customtkinter as tk
+from translate import traduzir
 
-translator = Translator()
+janela = tk.CTk()
 
-example = "Bom dia pessoal, é um prazer estar aqui com vocês"
-example_translated = translator.translate(example, "en")
-print(example_translated)
+janela.geometry("700x500")
+janela.resizable(False, False)
+janela.title("LanguaFace")
+
+title = tk.CTkLabel(janela, text="Traduza o texto que quiser")
+title.pack(padx=10, pady=10)
+
+texto = tk.CTkEntry(janela, placeholder_text="Informe a frase a ser traduzida", width=500)
+texto.pack(padx=10)
+
+labelIdioma = tk.CTkLabel(janela, text="Informe o idioma")
+labelIdioma.pack(padx=10, pady=10)
+
+combo = tk.CTkComboBox(janela, values=["Inglês", "Português", "Chines", "Espanhol", "Francês", "Russo"])
+combo.pack(padx=10)
+
+def clique():
+    traducao = traduzir(texto, combo)
+    print(traducao)
+
+
+botao = tk.CTkButton(janela, text="Traduzir", command=clique)
+botao.pack(padx=10, pady=30)
+
+janela.mainloop()
