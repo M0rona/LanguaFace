@@ -1,10 +1,15 @@
-import googletrans
+from googletrans import Translator
 
-tradutor = googletrans.Translator()
-
-def traduzir(entry, combo):
-    texto = entry.get();
+translate = Translator()
+def translator(entry, combo):
+    texto = entry.get()
+    comboText = combo.get()
     
-    traducao = tradutor.translate(texto, 'en')
-    
-    return traducao.text
+    comboItems = {
+        "Inglês": "en",
+        "Português": "pt",
+        "Espanhol": "es",
+        "Francês": "fr",
+    }
+        
+    return translate.translate(texto, dest=comboItems[comboText]).text
