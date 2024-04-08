@@ -20,7 +20,7 @@ combo = tk.CTkComboBox(janela, values=["Inglês", "Português", "Chines", "Espan
 combo.pack(padx=10)
 
 def clique():
-    traducao = traduzir(texto)
+    traducao = traduzir(texto, combo)
     print(traducao)
 
 
