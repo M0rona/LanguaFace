@@ -16,7 +16,7 @@ texto.pack(padx=10)
 labelIdioma = tk.CTkLabel(janela, text="Informe o idioma")
 labelIdioma.pack(padx=10, pady=10)
 
-combo = tk.CTkComboBox(janela, values=["Inglês", "Português", "Chines", "Espanhol", "Francês", "Russo"])
+combo = tk.CTkComboBox(janela, values=["Inglês", "Português", "Chinês", "Espanhol", "Francês", "Russo"])
 combo.pack(padx=10)
 
 def clique():
