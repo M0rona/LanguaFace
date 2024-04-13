@@ -3,25 +3,38 @@ import pyttsx3
 
 recognizer= speech_recognition.Recognizer()
 
-languages= {
-    'portuguese': 'pt-BR',
-    'english': 'en-US',
-    'spanish': 'es-ES',
-    'franch': 'fr-FR',
-}
+def voice(combo):
+    comboAudio = combo.get()
+    languages= {
+        "Inglês": "en",
+        "Francês": "fr",
+        "Espanhol": "es",
+        "Português": "pt",
+    }
+    while True:
+        try:
+            with speech_recognition.Microphone() as mic:
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio= recognizer.listen(mic)
+                text= recognizer.recognize_google(audio, language= languages[comboAudio]).lower()  
+                return text
 
-while True:
-    try:
-        print('Listening...')
-        with speech_recognition.Microphone() as mic:
-            recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-            audio= recognizer.listen(mic)
+        except speech_recognition.UnknownValueError:
+            recognizer= speech_recognition.Recognizer()
+            print("Sorry, i didn't catch that. Please, try again.")
+            continue
+        
+# while True:
+#     try:
+#         print('Listening...')
+#         with speech_recognition.Microphone() as mic:
+#             recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+#             audio= recognizer.listen(mic)
 
-            text= recognizer.recognize_google(audio, language= languages['franch'])
-            text= text.lower()
-
-            print(f'You said: {text}')
+#             text= recognizer.recognize_google(audio, language= languages['Inglês']).lower()
+#             print(f'You said: {text}')
     
-    except speech_recognition.UnknownValueError():
-        recognizer= speech_recognition.Recognizer()
-        continue  
+#     except speech_recognition.UnknownValueError:
+#         recognizer= speech_recognition.Recognizer()
+#         print("Sorry, i didn't catch that. Please, try again.")
+#         continue  
