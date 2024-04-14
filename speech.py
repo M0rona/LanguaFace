@@ -12,7 +12,7 @@ def voice(entry, combo):
         "Francês": "fr",
         "Espanhol": "es",
         "Português": "pt",
-        "Mandarin": "zh-cn",
+        "Mandarim": "zh-cn",
     }          
     while True:
         try:

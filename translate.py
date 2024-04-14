@@ -10,6 +10,7 @@ def translator(entry, combo):
         "Português": "pt",
         "Espanhol": "es",
         "Francês": "fr",
+        "Mandarim": "zh-cn",
     }
         
     return translate.translate(texto, dest=comboItems[comboText]).text
