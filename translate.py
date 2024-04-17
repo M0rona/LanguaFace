@@ -1,9 +1,7 @@
 from googletrans import Translator
 
 translate = Translator()
-def translator(entry, combo):
-    texto = entry.get()
-    comboText = combo.get()
+def translator(text, language):
     
     comboItems = {
         "Inglês": "en",
@@ -13,4 +11,4 @@ def translator(entry, combo):
         "Mandarim": "zh-cn",
     }
         
-    return translate.translate(texto, dest=comboItems[comboText]).text
+    return translate.translate(text, dest=comboItems[language]).text

@@ -1,31 +1,37 @@
 import speech_recognition
 import pyttsx3
+from translate import translator
 
 recognizer= speech_recognition.Recognizer()
 
 #voice function using speech recognition
-def voice(entry, combo):
-    text = entry.get()
-    comboAudio = combo.get()
-    languages= {
-        "Inglês": "en",
-        "Francês": "fr",
-        "Espanhol": "es",
-        "Português": "pt",
-        "Mandarim": "zh-cn",
-    }          
+def voice():
+    recognizer= speech_recognition.Recognizer()
+    # comboAudio = combo.get()
+    # languages= {
+    #     "Inglês": "en",
+    #     "Francês": "fr",
+    #     "Espanhol": "es",
+    #     "Português": "pt",
+    #     "Mandarim": "zh-cn",
+    # }
+    
+    language = "pt"
+    
     while True:
         try:
             print('Listening...')
             with speech_recognition.Microphone() as mic:
                 recognizer.adjust_for_ambient_noise(mic, duration=0.2)
                 audio= recognizer.listen(mic)
-                text= recognizer.recognize_google(audio, language= languages[comboAudio]) 
-                return text.lower() 
+                text= recognizer.recognize_google(audio, language= language) 
+                print(text.lower())
+                print(translator(text.lower(), "Inglês"))
+
 
         except speech_recognition.UnknownValueError:
             recognizer= speech_recognition.Recognizer()
-            print("Sorry, i didn't catch that. Please, try again.")
+            print("Não entendi, tente novamente.")
             continue
 
 # listening voice from pyttsx3 test
