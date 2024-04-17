@@ -3,7 +3,6 @@ from translate import translator
 from speech import voice
 from PIL import Image
 
-
 window = tk.CTk()
 
 #Definiçao da tela
@@ -18,9 +17,9 @@ window.columnconfigure(2, weight=1)
 
 #box linguagens de entrada
 labelInput = tk.CTkLabel(window, text="Idioma de entrada")
-labelInput.grid(row=0, column=0, columnspan=1)
+labelInput.grid(row=0, column=0, columnspan=1, pady=10)
 
-comboInput = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
+comboInput = tk.CTkComboBox(window, values=["Português", "Inglês" , "Espanhol", "Francês", "Mandarim"])
 comboInput.grid(row=1, column=0, columnspan=1)
 
 # Icone central
@@ -32,7 +31,7 @@ icon_label.grid(row=1, column=1, columnspan=1)
 
 # box linguagens de saida
 labelOutput = tk.CTkLabel(window, text="Idioma de saida")
-labelOutput.grid(row=0, column=2, columnspan=1)
+labelOutput.grid(row=0, column=2, columnspan=1, pady=10)
 
 comboOutput = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
 comboOutput.grid(row=1, column=2, columnspan=1)
