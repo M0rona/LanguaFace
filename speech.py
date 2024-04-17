@@ -25,8 +25,9 @@ def voice():
                 recognizer.adjust_for_ambient_noise(mic, duration=0.2)
                 audio= recognizer.listen(mic)
                 text= recognizer.recognize_google(audio, language= language) 
-                print(text.lower())
-                print(translator(text.lower(), "Inglês"))
+                # print(text.lower())
+                # return text.lower()
+                return translator(text.lower(), "Inglês")
 
 
         except speech_recognition.UnknownValueError:

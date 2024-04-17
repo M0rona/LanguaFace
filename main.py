@@ -1,6 +1,4 @@
 import customtkinter as tk
-from translate import translator
-from speech import voice
 from PIL import Image
 
 window = tk.CTk()
