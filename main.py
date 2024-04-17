@@ -7,41 +7,34 @@ from PIL import Image
 window = tk.CTk()
 
 #Definiçao da tela
-window.geometry("700x500")
+window.geometry("500x500")
 window.resizable(False, False)
 window.title("LanguaFace")
 
-title = tk.CTkLabel(window, text="O que deseja traduzir?")
-title.pack(padx=10, pady=10)
+# Configura as colunas para terem a mesma largura
+window.columnconfigure(0, weight=1)
+window.columnconfigure(1, weight=1)
+window.columnconfigure(2, weight=1)
 
-#input box texto traduçao
-text = tk.CTkEntry(window, placeholder_text="Digite aqui...", width=500)
-text.pack(padx=10)
+#box linguagens de entrada
+labelInput = tk.CTkLabel(window, text="Idioma de entrada")
+labelInput.grid(row=0, column=0, columnspan=1)
 
-#botao voz
-def clickVoice():
-    print(voice(text, combo))
-    
-my_image = tk.CTkImage(light_image=Image.open("./images/microfone.png"), dark_image=Image.open("./images/microfone.png"), size=(35, 35))
-buttonVoice = tk.CTkButton(window, image=my_image, width=30, height=30, text= "", command=clickVoice)
-buttonVoice.pack(padx=25, pady=25)
+comboInput = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
+comboInput.grid(row=1, column=0, columnspan=1)
 
+# Icone central
+icon = tk.CTkImage(light_image=Image.open("./images/ArrowDark.png"), dark_image=Image.open("./images/ArrowWhite.png"), size=(34, 34))
 
-#box linguagens
-labelLanguages = tk.CTkLabel(window, text="Informe o idioma")
-labelLanguages.pack(padx=10, pady=8)
+icon_label = tk.CTkLabel(window, image=icon, text="")
+icon_label.image = icon  # Guarda uma referência à imagem para evitar que ela seja coletada como lixo
+icon_label.grid(row=1, column=1, columnspan=1)
 
-combo = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
-combo.pack(padx=10)
+# box linguagens de saida
+labelOutput = tk.CTkLabel(window, text="Idioma de saida")
+labelOutput.grid(row=0, column=2, columnspan=1)
 
-#box frase traduzida
-traducao = tk.CTkLabel(window, width=500, bg_color="#242424", text="Tradução", corner_radius=10, fg_color="#343638")
-traducao.pack(padx=10, pady=20)
-
-def click():
-    traducao.configure(text=translator(text, combo))
-
-button = tk.CTkButton(window, text="Traduzir", command=click)
-button.pack(padx=10, pady=30)
+comboOutput = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
+comboOutput.grid(row=1, column=2, columnspan=1)
 
 window.mainloop()
