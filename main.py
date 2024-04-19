@@ -1,10 +1,11 @@
 import customtkinter as tk
 from PIL import Image
+from webcam import startCaptureVideo
 
 window = tk.CTk()
 
 #Definiçao da tela
-window.geometry("500x500")
+window.geometry("500x300")
 window.resizable(False, False)
 window.title("LanguaFace")
 
@@ -33,5 +34,21 @@ labelOutput.grid(row=0, column=2, columnspan=1, pady=10)
 
 comboOutput = tk.CTkComboBox(window, values=["Inglês", "Português", "Espanhol", "Francês", "Mandarim"])
 comboOutput.grid(row=1, column=2, columnspan=1)
+
+def clickStart():
+    languages = {
+        "Inglês": "en",
+        "Francês": "fr",
+        "Espanhol": "es",
+        "Português": "pt",
+        "Mandarim": "zh-cn",
+    }
+
+    startCaptureVideo(languages[comboInput.get()], languages[comboOutput.get()])
+    window.destroy()    
+
+
+buttonStart = tk.CTkButton(window, text="Iniciar", command=clickStart)
+buttonStart.grid(row=2, column=1, columnspan=1, pady=30)
 
 window.mainloop()
