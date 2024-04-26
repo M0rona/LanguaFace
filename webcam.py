@@ -1,4 +1,6 @@
-import cv2 
+import cv2
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 import threading
 import textwrap
 
@@ -13,57 +15,48 @@ def startCaptureVideo(langIn, langOut):
             recognized_text = voice(langIn, langOut)
   
     def capture_video():
-        # Crie a janela
-        cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
-
-        # Faça a janela aparecer em cima de todas as outras
-        cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
-
+        # Inicie a captura de vídeo
         vid = cv2.VideoCapture(0) 
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        font_scale = 1
+        font = ImageFont.truetype("arial.ttf", 30)
         color = (0, 255, 255)
         thickness = 2
-    
+
         while True: 
             ret, frame = vid.read() 
 
-            # Obtenha a largura do quadro
-            frame_width = frame.shape[1]
+            if ret:
+                # Converta o quadro do OpenCV para uma imagem Pillow
+                img_pil = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                draw = ImageDraw.Draw(img_pil)
 
-            # Calcule a largura da caixa de texto
-            text_width = cv2.getTextSize(recognized_text, font, font_scale, thickness)[0][0]
+                # Obtenha a largura da imagem
+                img_width, img_height = img_pil.size
 
-            # Se a largura do texto for maior que a largura do quadro, quebre o texto
-            if text_width > frame_width:
-                wrapped_text = textwrap.wrap(recognized_text, width=int(frame_width / (thickness * 9)))
-            else:
-                wrapped_text = [recognized_text]
+                # Quebre o texto se for muito longo para caber na imagem
+                wrapped_text = textwrap.wrap(recognized_text, width=int(img_width / 10))
 
-            # Posição y 
-            y = 450 - ((len(wrapped_text) - 1) * 40)
+                # Desenhe o texto na imagem
+                y = img_height - (len(wrapped_text) - 1) * 40
 
-            # Itere sobre as linhas do texto quebrado
-            for line in wrapped_text:
-                # Calcule a posição x para centralizar o texto
-                text_width = cv2.getTextSize(line, font, font_scale, thickness)[0][0]
-                x = int((frame_width - text_width) / 2)
+                for line in wrapped_text:
+                    text_width = draw.textlength(line, font)
+                    x = (img_width - text_width) / 2
+                    draw.text((x, y), line, fill=(255, 255, 255, 128), font=font)
+                    y += 30
 
-                # Coloque o texto no quadro
-                cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
+                # Converta a imagem Pillow de volta para o formato OpenCV
+                frame = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
 
-                # Atualize a posição y para a próxima linha
-                y += 40
+                # Mostre o quadro com o texto
+                cv2.imshow('Video', frame)
 
-            cv2.imshow('Video', frame) 
-        
-            if cv2.waitKey(1) & 0xFF == ord('q'): 
-                break
+                if cv2.waitKey(1) & 0xFF == ord('q'): 
+                    break
 
         vid.release() 
         cv2.destroyAllWindows()
 
-    # Create and start the threads
+    # Crie e inicie as threads
     speech_thread = threading.Thread(target=recognize_speech)
     video_thread = threading.Thread(target=capture_video)
     speech_thread.start()
