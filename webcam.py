@@ -1,6 +1,7 @@
 import cv2 
 import threading
 import textwrap
+import pyvirtualcam
 
 from speech import voice
 
@@ -24,41 +25,48 @@ def startCaptureVideo(langIn, langOut):
         font_scale = 1
         color = (0, 255, 255)
         thickness = 2
-    
-        while True: 
-            ret, frame = vid.read() 
 
-            # Obtenha a largura do quadro
-            frame_width = frame.shape[1]
+        with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
+            while True: 
+                ret, frame = vid.read() 
 
-            # Calcule a largura da caixa de texto
-            text_width = cv2.getTextSize(recognized_text, font, font_scale, thickness)[0][0]
+                # Obtenha a largura do quadro
+                frame_width = frame.shape[1]
 
-            # Se a largura do texto for maior que a largura do quadro, quebre o texto
-            if text_width > frame_width:
-                wrapped_text = textwrap.wrap(recognized_text, width=int(frame_width / (thickness * 9)))
-            else:
-                wrapped_text = [recognized_text]
+                # Calcule a largura da caixa de texto
+                text_width = cv2.getTextSize(recognized_text, font, font_scale, thickness)[0][0]
 
-            # Posição y 
-            y = 450 - ((len(wrapped_text) - 1) * 40)
+                # Se a largura do texto for maior que a largura do quadro, quebre o texto
+                if text_width > frame_width:
+                    wrapped_text = textwrap.wrap(recognized_text, width=int(frame_width / (thickness * 9)))
+                else:
+                    wrapped_text = [recognized_text]
 
-            # Itere sobre as linhas do texto quebrado
-            for line in wrapped_text:
-                # Calcule a posição x para centralizar o texto
-                text_width = cv2.getTextSize(line, font, font_scale, thickness)[0][0]
-                x = int((frame_width - text_width) / 2)
+                # Posição y 
+                y = 450 - ((len(wrapped_text) - 1) * 40)
 
-                # Coloque o texto no quadro
-                cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
+                # Itere sobre as linhas do texto quebrado
+                for line in wrapped_text:
+                    # Calcule a posição x para centralizar o texto
+                    text_width = cv2.getTextSize(line, font, font_scale, thickness)[0][0]
+                    x = int((frame_width - text_width) / 2)
 
-                # Atualize a posição y para a próxima linha
-                y += 40
+                    # Coloque o texto no quadro
+                    cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
 
-            cv2.imshow('Video', frame) 
-        
-            if cv2.waitKey(1) & 0xFF == ord('q'): 
-                break
+                    # Atualize a posição y para a próxima linha
+                    y += 40
+
+                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                cam.send(frame_rgb)
+
+                cam.sleep_until_next_frame()
+
+                cv2.imshow('Video', frame) 
+            
+                if cv2.waitKey(1) & 0xFF == ord('q'): 
+                    break
 
         vid.release() 
         cv2.destroyAllWindows()
