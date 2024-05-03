@@ -7,3 +7,4 @@ setuptools==69.2.0
 pillow==10.3.0
 opencv-python==4.9.0.80
 pyvirtualcam==0.11.1
+pygrabber==0.2

@@ -1,8 +1,10 @@
 import customtkinter as tk
 from PIL import Image
 from webcam import startCaptureVideo
+from pygrabber.dshow_graph import FilterGraph
 
 window = tk.CTk()
+graph = FilterGraph()
 
 #Definiçao da tela
 window.geometry("500x300")
@@ -44,11 +46,16 @@ def clickStart():
         "Mandarim": "zh-cn",
     }
 
-    startCaptureVideo(languages[comboInput.get()], languages[comboOutput.get()])
+    startCaptureVideo(languages[comboInput.get()], languages[comboOutput.get()], graph.get_input_devices().index(comboDevices.get()))
     window.destroy()    
 
+labelDevices = tk.CTkLabel(window, text="Dispositivo de entrada")
+labelDevices.grid(row=2, column=1, columnspan=1, pady=10)
+
+comboDevices = tk.CTkComboBox(window, values=graph.get_input_devices())
+comboDevices.grid(row=3, column=1, columnspan=1)
 
 buttonStart = tk.CTkButton(window, text="Iniciar", command=clickStart)
-buttonStart.grid(row=2, column=1, columnspan=1, pady=30)
+buttonStart.grid(row=4, column=1, columnspan=1, pady=30)
 
 window.mainloop()

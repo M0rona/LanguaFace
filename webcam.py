@@ -7,7 +7,7 @@ from speech import voice
 
 recognized_text = ""
 
-def startCaptureVideo(langIn, langOut):
+def startCaptureVideo(langIn, langOut, deviceIndex):
     def recognize_speech():
         global recognized_text
         while True:
@@ -20,7 +20,7 @@ def startCaptureVideo(langIn, langOut):
         # Faça a janela aparecer em cima de todas as outras
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
 
-        vid = cv2.VideoCapture(0) 
+        vid = cv2.VideoCapture(deviceIndex) 
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 1
         color = (0, 255, 255)
