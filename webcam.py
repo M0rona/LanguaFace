@@ -3,6 +3,11 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import threading
 import textwrap
+import pytesseract
+
+# Configurando o caminho para o executável do Tesseract '''CASO ELE NÃO ESTEJA NO PATH'''
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 
 from speech import voice
 
@@ -31,6 +36,9 @@ def startCaptureVideo(langIn, langOut):
 
                 # Obtenha a largura da imagem
                 img_width, img_height = img_pil.size
+
+                # Usa o Tesseract para reconhecer o texto da imagem
+                recognized_text = pytesseract.image_to_string(img_pil)
 
                 # Quebre o texto se for muito longo para caber na imagem
                 wrapped_text = textwrap.wrap(recognized_text, width=int(img_width / 10))
