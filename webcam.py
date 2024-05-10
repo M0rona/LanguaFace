@@ -2,6 +2,8 @@ import cv2
 import threading
 import textwrap
 import pyvirtualcam
+from PIL import ImageFont, ImageDraw, Image
+import numpy as np
 
 from speech import voice
 
@@ -23,7 +25,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
         vid = cv2.VideoCapture(deviceIndex) 
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 1
-        color = (0, 255, 255)
+        color = "yellow"
         thickness = 2
 
         with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
@@ -43,7 +45,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
                     wrapped_text = [recognized_text]
 
                 # Posição y 
-                y = 450 - ((len(wrapped_text) - 1) * 40)
+                y = 400 - ((len(wrapped_text) - 1) * 40)
 
                 # Itere sobre as linhas do texto quebrado
                 for line in wrapped_text:
@@ -51,8 +53,26 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
                     text_width = cv2.getTextSize(line, font, font_scale, thickness)[0][0]
                     x = int((frame_width - text_width) / 2)
 
-                    # Coloque o texto no quadro
-                    cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
+                    #Transformando o frame em imagem
+                    image = frame
+                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    pil_image = Image.fromarray(image)
+
+                    # Setar fontes para o tipo de linguagem:
+                    if (langOut == 'zh-cn'):
+                        fontText = ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35)
+                    else:
+                        fontText = ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
+
+                    # Coloque o texto no frame
+                    draw = ImageDraw.Draw(pil_image)
+                    draw.text((x, y), line, fill=color, font=fontText)
+
+                    image = np.asarray(pil_image)
+                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)     
+
+                    # Coloque o texto no quadro -- BACKUP ANTIGO
+                    #cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
 
                     # Atualize a posição y para a próxima linha
                     y += 40
@@ -63,8 +83,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
 
                 cam.sleep_until_next_frame()
 
-                cv2.imshow('Video', frame) 
-            
+                cv2.imshow('Video', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'): 
                     break
 
