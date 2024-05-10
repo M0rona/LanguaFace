@@ -23,8 +23,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
 
         vid = cv2.VideoCapture(deviceIndex) 
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        font_scale = 1
+        font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
         thickness = 2
 
@@ -36,7 +35,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
                 frame_width = frame.shape[1]
 
                 # Calcule a largura da caixa de texto
-                text_width = cv2.getTextSize(recognized_text, font, font_scale, thickness)[0][0]
+                text_width = font.font.getsize(recognized_text)[0][0]
 
                 # Se a largura do texto for maior que a largura do quadro, quebre o texto
                 if text_width > frame_width:
@@ -47,50 +46,41 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
                 # Posição y 
                 y = 400 - ((len(wrapped_text) - 1) * 40)
 
+                #Transformando o frame em imagem
+                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                pil_image = Image.fromarray(image)
+
                 # Itere sobre as linhas do texto quebrado
                 for line in wrapped_text:
                     # Calcule a posição x para centralizar o texto
-                    text_width = cv2.getTextSize(line, font, font_scale, thickness)[0][0]
+                    text_width = font.font.getsize(line)[0][0]
                     x = int((frame_width - text_width) / 2)
-
-                    #Transformando o frame em imagem
-                    image = frame
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                    pil_image = Image.fromarray(image)
-
-                    # Setar fontes para o tipo de linguagem:
-                    if (langOut == 'zh-cn'):
-                        fontText = ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35)
-                    else:
-                        fontText = ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
-
-                    # Coloque o texto no frame
+                    
+                    # Coloque o texto no frame linha a linha
                     draw = ImageDraw.Draw(pil_image)
-                    draw.text((x, y), line, fill=color, font=fontText)
-
-                    image = np.asarray(pil_image)
-                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)     
-
-                    # Coloque o texto no quadro -- BACKUP ANTIGO
-                    #cv2.putText(frame, line, (x, y), font, font_scale, color, thickness)
+                    draw.text((x, y), line, fill=color, font=font)
 
                     # Atualize a posição y para a próxima linha
                     y += 40
 
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                # Converte a imagem de volta para o frame
+                pilImage = np.asarray(pil_image)
+                frame_bgr  = cv2.cvtColor(pilImage, cv2.COLOR_RGB2BGR) 
 
-                cam.send(frame_rgb)
+                # Envia o frame para a câmera virtual
+                cam.send(frame_bgr)
 
                 cam.sleep_until_next_frame()
 
-                cv2.imshow('Video', image)
+                # Exibe o frame no preview
+                cv2.imshow('Video', frame_bgr)
                 if cv2.waitKey(1) & 0xFF == ord('q'): 
                     break
 
         vid.release() 
         cv2.destroyAllWindows()
 
-    # Create and start the threads
+    # Cria e inicia as threads para rodar as duas funções ao mesmo tempo
     speech_thread = threading.Thread(target=recognize_speech)
     video_thread = threading.Thread(target=capture_video)
     speech_thread.start()
