@@ -1,6 +1,7 @@
 import cv2 
 import threading
 import textwrap
+import win32com.client
 import pyvirtualcam
 from PIL import ImageFont, ImageDraw, Image
 import numpy as np
@@ -9,12 +10,31 @@ from speech import voice
 
 recognized_text = ""
 
+def listar_nomes_dispositivos_video_windows():
+    wmi = win32com.client.GetObject("winmgmts:")
+    cameras = wmi.ExecQuery("SELECT * FROM Win32_PnPEntity WHERE PNPClass='Camera'")
+    nomes_dispositivos = [camera.Name for camera in cameras]
+    return nomes_dispositivos
+
+def encontrar_indice_por_nome(nomes_dispositivos):
+    for index in range(len(nomes_dispositivos)):
+        if nomes_dispositivos[index]:
+            return index
+    return -1
+
+#TESTE  
+dict_index_names = {}
+nomes= listar_nomes_dispositivos_video_windows()
+indice = encontrar_indice_por_nome(nomes)
+dict_index_names.update({indice: nomes})
+print(dict_index_names)
+
 def startCaptureVideo(langIn, langOut, deviceIndex):
     def recognize_speech():
         global recognized_text
         while True:
             recognized_text = voice(langIn, langOut)
-  
+    
     def capture_video():
         # Crie a janela
         cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
@@ -23,7 +43,7 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
 
         vid = cv2.VideoCapture(deviceIndex) 
-        font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
+        font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("C:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
         thickness = 2
 
