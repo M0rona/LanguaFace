@@ -8,21 +8,26 @@ import numpy as np
 from speech import voice
 
 recognized_text = ""
+running = True  # Variável global para controlar o loop
 
-def startCaptureVideo(langIn, langOut, deviceIndex):
+def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
     def recognize_speech():
         global recognized_text
-        while True:
-            recognized_text = voice(langIn, langOut)
+        global running  
+
+        while running:  
+            recognized_text = voice(langIn, langOut, audioIndex)
   
     def capture_video():
+        global running
+
         # Crie a janela
         cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
         # Faça a janela aparecer em cima de todas as outras
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
 
-        vid = cv2.VideoCapture(deviceIndex) 
+        vid = cv2.VideoCapture(videoIndex) 
         font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
         thickness = 2
@@ -67,14 +72,18 @@ def startCaptureVideo(langIn, langOut, deviceIndex):
                 pilImage = np.asarray(pil_image)
                 frame_bgr  = cv2.cvtColor(pilImage, cv2.COLOR_RGB2BGR) 
 
+                # Converte o frame de BGR para RGB
+                frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+
                 # Envia o frame para a câmera virtual
-                cam.send(frame_bgr)
+                cam.send(frame_rgb)
 
                 cam.sleep_until_next_frame()
 
                 # Exibe o frame no preview
                 cv2.imshow('Video', frame_bgr)
-                if cv2.waitKey(1) & 0xFF == ord('q'): 
+                if cv2.waitKey(1) == 27 or cv2.getWindowProperty('Video', cv2.WND_PROP_VISIBLE) < 1: 
+                    running = False
                     break
 
         vid.release() 

@@ -1,10 +1,11 @@
 import customtkinter as tk
 from PIL import Image
 from webcam import startCaptureVideo
-from pygrabber.dshow_graph import FilterGraph
+from devices import listDevices
 
 window = tk.CTk()
-graph = FilterGraph()
+devicesVideo = listDevices('video')
+devicesAudio = listDevices('audio')
 
 #Definiçao da tela
 window.geometry("500x300")
@@ -46,14 +47,25 @@ def clickStart():
         "Mandarim": "zh-cn",
     }
 
-    startCaptureVideo(languages[comboInput.get()], languages[comboOutput.get()], graph.get_input_devices().index(comboDevices.get()))
+    startCaptureVideo(
+        languages[comboInput.get()], 
+        languages[comboOutput.get()], 
+        devicesVideo.index(comboDevicesVideo.get()),
+        devicesAudio.index(comboDevicesAudio.get())
+    )
     window.destroy()    
 
-labelDevices = tk.CTkLabel(window, text="Dispositivo de entrada")
-labelDevices.grid(row=2, column=1, columnspan=1, pady=10)
+labelDevicesVideo = tk.CTkLabel(window, text="Entradas de vídeo")
+labelDevicesVideo.grid(row=2, column=0, columnspan=2, pady=10)
 
-comboDevices = tk.CTkComboBox(window, values=graph.get_input_devices())
-comboDevices.grid(row=3, column=1, columnspan=1)
+comboDevicesVideo = tk.CTkComboBox(window, values=devicesVideo)
+comboDevicesVideo.grid(row=3, column=0, columnspan=2)
+
+labelDevicesAudio = tk.CTkLabel(window, text="Entradas de áudio")
+labelDevicesAudio.grid(row=2, column=1, columnspan=2, pady=10)
+
+comboDevicesAudio = tk.CTkComboBox(window, values=devicesAudio)
+comboDevicesAudio.grid(row=3, column=1, columnspan=2)
 
 buttonStart = tk.CTkButton(window, text="Iniciar", command=clickStart)
 buttonStart.grid(row=4, column=1, columnspan=1, pady=30)
