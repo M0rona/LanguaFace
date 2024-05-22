@@ -6,6 +6,7 @@ from PIL import ImageFont, ImageDraw, Image
 import numpy as np
 
 from speech import voice
+from showErrors import showErrorVideo
 
 recognized_text = ""
 running = True  # Variável global para controlar o loop
@@ -23,6 +24,7 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
 
         # Crie a janela
         cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Video', 640, 480)
 
         # Faça a janela aparecer em cima de todas as outras
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
@@ -30,11 +32,21 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
         vid = cv2.VideoCapture(videoIndex) 
         font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
-        thickness = 2
+        thickness = 2            
 
         with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
             while True: 
                 ret, frame = vid.read() 
+
+                if frame is None:
+                    vid.release()
+                    cv2.destroyAllWindows()
+                    
+                    showErrorVideo()
+                    
+                    running = False
+
+                    break
 
                 # Obtenha a largura do quadro
                 frame_width = frame.shape[1]
