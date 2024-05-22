@@ -35,7 +35,7 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
         thickness = 2            
 
         with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
-            while True: 
+            while running: 
                 ret, frame = vid.read() 
 
                 if frame is None:
