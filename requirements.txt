@@ -1,5 +1,4 @@
 customtkinter==5.2.2
-googletrans==4.0.0rc1
 speechrecognition==3.10.3
 pyttsx3==2.90
 pyaudio==0.2.14
@@ -8,3 +7,4 @@ pillow==10.3.0
 opencv-python==4.9.0.80
 pyvirtualcam==0.11.1
 capture-devices==4.2
+translate
