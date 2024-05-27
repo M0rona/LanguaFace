@@ -1,13 +1,15 @@
 import cv2 
-import threading
 import textwrap
+import threading
+# import pytesseract
+import numpy as np
 import pyvirtualcam
 from PIL import ImageFont, ImageDraw, Image
-import numpy as np
 
 from speech import voice
 from showErrors import showErrorVideo
 
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR'
 recognized_text = ""
 running = True  # Variável global para controlar o loop
 
@@ -30,23 +32,22 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
 
         vid = cv2.VideoCapture(videoIndex) 
-        font = langOut == 'zh-cn' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
+        font = langOut == 'zh' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
         thickness = 2            
 
         with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
             while running: 
                 ret, frame = vid.read() 
+                if not ret: 
+                    break
 
                 if frame is None:
                     vid.release()
                     cv2.destroyAllWindows()
-                    
                     showErrorVideo()
-                    
                     running = False
-
-                    break
+                    continue
 
                 # Obtenha a largura do quadro
                 frame_width = frame.shape[1]

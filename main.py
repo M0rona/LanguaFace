@@ -43,8 +43,8 @@ def clickStart():
         "Inglês": "en",
         "Francês": "fr",
         "Espanhol": "es",
-        "Português": "pt",
-        "Mandarim": "zh-cn",
+        "Português": "pt-br",
+        "Mandarim": "zh",
     }
 
     startCaptureVideo(
