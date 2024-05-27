@@ -5,7 +5,6 @@ import threading
 import numpy as np
 import pyvirtualcam
 from PIL import ImageFont, ImageDraw, Image
-
 from speech import voice
 from showErrors import showErrorVideo
 
@@ -30,12 +29,10 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
 
         # Faça a janela aparecer em cima de todas as outras
         cv2.setWindowProperty('Video', cv2.WND_PROP_TOPMOST, 1)
-
         vid = cv2.VideoCapture(videoIndex) 
         font = langOut == 'zh' and ImageFont.truetype("C:\Windows\Fonts\simsun.ttc", 35) or ImageFont.truetype("c:\WINDOWS\Fonts\ARIAL.TTF", 35)
         color = "yellow"
         thickness = 2            
-
         with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
             while running: 
                 ret, frame = vid.read() 
@@ -90,9 +87,8 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
 
                 # Envia o frame para a câmera virtual
                 cam.send(frame_rgb)
-
                 cam.sleep_until_next_frame()
-
+                
                 # Exibe o frame no preview
                 cv2.imshow('Video', frame_bgr)
                 if cv2.waitKey(1) == 27 or cv2.getWindowProperty('Video', cv2.WND_PROP_VISIBLE) < 1: 
