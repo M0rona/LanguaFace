@@ -21,7 +21,7 @@ def startCaptureVideo(langIn, langOut, videoIndex, audioIndex):
             recognized_text = voice(langIn, langOut, audioIndex)
   
     def capture_video():
-        global running
+        global running, recognized_text
 
         # Crie a janela
         cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
